@@ -22,7 +22,7 @@ public class AlertRabbit {
         }
     }
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
