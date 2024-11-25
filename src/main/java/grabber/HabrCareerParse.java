@@ -1,5 +1,6 @@
 package grabber;
 
+import grabber.utils.HabrCareerDateTimeParser;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,11 +30,9 @@ public class HabrCareerParse {
             String link = String.format("%s%s ", SOURCE_LINK, linkElement.attr("href"));
             Element dateTimeElement = row.select(".vacancy-card__date").first();
             String dateTime = dateTimeElement.child(0).attr("datetime");
-            LocalDateTime source = LocalDateTime.parse(dateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
-            String authDatePattern = "dd.MM.yyyy HH:mm:ss";
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(authDatePattern);
-            String output = source.format(formatter);
-            System.out.printf("%s %s %s %n", vacancyName, link, output);
+            HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
+            System.out.printf("%s %s %s %n", vacancyName, link,
+                    parser.parse(dateTime).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
         });
     }
 }
