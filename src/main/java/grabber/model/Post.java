@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Post {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMMM-EEEE-yyyy HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     private int id;
     private String title;
     private String link;
@@ -14,6 +14,13 @@ public class Post {
 
     public Post(int id, String title, String link, String description, LocalDateTime created) {
         this.id = id;
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.created = created;
+    }
+
+    public Post(String title, String link, String description, LocalDateTime created) {
         this.title = title;
         this.link = link;
         this.description = description;
