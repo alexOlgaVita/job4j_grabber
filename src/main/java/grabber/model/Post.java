@@ -37,7 +37,6 @@ public class Post {
         int result = 17;
         result = prime * result + ((link == null) ? 0 : link.hashCode());
         result = prime * result + id;
-        result = prime * result + created.truncatedTo(ChronoUnit.MILLIS).hashCode();
         return result;
     }
 
