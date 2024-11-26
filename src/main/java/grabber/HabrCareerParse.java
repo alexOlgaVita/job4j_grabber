@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class HabrCareerParse {
 
@@ -16,6 +17,20 @@ public class HabrCareerParse {
     public static final String PREFIX = "/vacancies?page=";
     public static final String SUFFIX = "&q=Java%20developer&type=all";
     private static final int PAGE_COUNT = 5;
+
+    private static String retrieveDescription(String link) throws IOException {
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        String result = "";
+//        Optional<String> sentence = document.select(".basic-section basic-section--appearance-vacancy-description")
+        Optional<String> sentence = document.select(".basic-section--appearance-vacancy-description")
+                .first()
+                .children()
+                .eachText()
+                .stream()
+                .reduce((x, y) -> System.lineSeparator() + x + System.lineSeparator() + y);
+        return sentence.get();
+    }
 
     public static void main(String[] args) throws IOException {
         for (int pageNumber = 1; pageNumber <= PAGE_COUNT; pageNumber++) {
@@ -33,6 +48,11 @@ public class HabrCareerParse {
                 HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
                 System.out.printf("%s %s %s %n", vacancyName, link,
                         parser.parse(dateTime).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+                try {
+                    System.out.println(retrieveDescription(link));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             });
         }
     }
