@@ -2,7 +2,6 @@ package grabber;
 
 import grabber.model.Post;
 import grabber.utils.DateTimeParser;
-import grabber.utils.HabrCareerDateTimeParser;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,7 +40,6 @@ public class HabrCareerParse implements Parse {
                 String postLink = String.format("%s%s ", link, linkElement.attr("href"));
                 Element dateTimeElement = row.select(".vacancy-card__date").first();
                 String dateTime = dateTimeElement.child(0).attr("datetime");
-                HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
                 try {
                     result.add(new Post(vacancyName, postLink, retrieveDescription(postLink), dateTimeParser.parse(dateTime)));
                 } catch (IOException e) {
@@ -55,7 +53,6 @@ public class HabrCareerParse implements Parse {
     private String retrieveDescription(String link) throws IOException {
         Connection connection = Jsoup.connect(link);
         Document document = connection.get();
-        String result = "";
         Optional<String> description = document.select(".basic-section--appearance-vacancy-description")
                 .first()
                 .children()
@@ -63,13 +60,5 @@ public class HabrCareerParse implements Parse {
                 .stream()
                 .reduce((x, y) -> x + System.lineSeparator() + y);
         return description.orElse("");
-    }
-
-    public static void main(String[] args) throws IOException {
-        HabrCareerParse habrcareerparse = new HabrCareerParse(new HabrCareerDateTimeParser());
-        List<Post> postList = habrcareerparse.list(SOURCE_LINK);
-        for (Post post : postList) {
-            System.out.println(post);
-        }
     }
 }

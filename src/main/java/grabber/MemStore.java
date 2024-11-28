@@ -36,7 +36,6 @@ public class MemStore implements Store {
     }
 
     @Override
-    public void close() throws Exception {
-
+    public void close() {
     }
 }

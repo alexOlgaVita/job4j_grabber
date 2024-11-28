@@ -1,17 +1,11 @@
 package grabber;
 
 import grabber.model.Post;
-import grabber.utils.HabrCareerDateTimeParser;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import static grabber.HabrCareerParse.SOURCE_LINK;
 
 public class PsqlStore implements Store {
 
@@ -98,26 +92,6 @@ public class PsqlStore implements Store {
     public void close() throws Exception {
         if (connection != null) {
             connection.close();
-        }
-    }
-
-    public static void main(String[] args) {
-        try (InputStream input = PsqlStore.class.getClassLoader()
-                .getResourceAsStream("db/liquibase.properties")) {
-            Properties config = new Properties();
-            config.load(input);
-            PsqlStore psqlstore = new PsqlStore(config);
-            HabrCareerParse habrcareerparse = new HabrCareerParse(new HabrCareerDateTimeParser());
-            List<Post> postList = habrcareerparse.list(SOURCE_LINK);
-            for (Post post : postList) {
-                psqlstore.save(post);
-            }
-            System.out.println("getAll()");
-            System.out.println(psqlstore.getAll());
-            System.out.println("getById(10)");
-            System.out.println(psqlstore.findById(10));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }
